@@ -5,22 +5,60 @@ public class LockerUtils {
     private int lockerCount;
     private final Scanner scanner;
 
-// constructor = sets how many lockers the system can handle
     public LockerUtils(int maxLockers) {
         lockers = new Locker[maxLockers];
         lockerCount = 0;
         scanner = new Scanner(System.in);
     }
-// =====================================================================================
 
-// method to rent
+    // ========================== show menu ==========================
+    public void showMenu() {
+        while (true) {
+            System.out.println("\n==== LOCKER MENU ====");
+            System.out.println("1. Rent a locker");
+            System.out.println("2. Access a locker");
+            System.out.println("3. Release a locker");
+            System.out.println("4. Exit");
+
+            System.out.print("Choose an option (1-4): ");
+            String option = scanner.nextLine();
+
+            Result result;
+            switch (option) {
+                case "1":
+                    result = rentLocker();
+                    break;
+                case "2":
+                    result = accessLocker();
+                    break;
+                case "3":
+                    result = releaseLocker();
+                    break;
+                case "4":
+                    result = goodBye();
+                    System.out.println(result.getMessage());
+                    return; // Exit the loop
+                default:
+                    System.out.println("Invalid option. Please try again.");
+                    continue;
+            }
+
+            System.out.println(result.getMessage());
+        }
+    }
+
+    // ========================== rent locker ==========================
     public Result rentLocker() {
         if (lockerCount >= lockers.length) {
             return new Result(false, "No lockers available.");
         }
 
-        int lockerNumber = (int) (Math.random() * 1000); // makes random 4-digit locker number
-        String pin = String.format("%04d", (int) (Math.random() * 100)); // 2-digit PIN with 2 leading zeros
+        int lockerNumber;
+        do {
+            lockerNumber = 1000 + (int) (Math.random() * 9000); // 1000–9999
+        } while (findLocker(lockerNumber) != null); // ensure it's unique
+
+        String pin = String.format("%04d", (int) (Math.random() * 10000)); // 0000–9999
 
         lockers[lockerCount] = new Locker(lockerNumber, pin);
         lockerCount++;
@@ -28,9 +66,7 @@ public class LockerUtils {
         return new Result(true, "Locker #" + lockerNumber + " rented with PIN: " + pin);
     }
 
-// ====================================================================================
-
-    // method to access
+    // ========================== access locker ==========================
     public Result accessLocker() {
         try {
             System.out.print("Enter your locker number: ");
@@ -53,9 +89,8 @@ public class LockerUtils {
             return new Result(false, "Invalid input. Please enter numbers only.");
         }
     }
-// ==================================================================================
 
-// method to release
+    // ========================== release locker ==========================
     public Result releaseLocker() {
         try {
             System.out.print("Enter your locker number: ");
@@ -87,16 +122,13 @@ public class LockerUtils {
             return new Result(false, "Invalid input. Please enter numbers only.");
         }
     }
-// ====================================================================================
 
-// method to exit
+    // ========================== exit ==========================
     public Result goodBye() {
         return new Result(true, "Goodbye!");
     }
-// =====================================================================================
 
-    // ========== Private Helpers ========== \\
-    // searches locker array to find locker that matches locker number
+    // ========================== private helpers ==========================
     private Locker findLocker(int lockerNumber) {
         for (int i = 0; i < lockerCount; i++) {
             if (lockers[i].getLockerNumber() == lockerNumber) {
@@ -105,10 +137,13 @@ public class LockerUtils {
         }
         return null;
     }
-// removes locker from the array when a user releases it
+
     private void removeLocker(int lockerNumber) {
         for (int i = 0; i < lockerCount; i++) {
             if (lockers[i].getLockerNumber() == lockerNumber) {
+                for (int j = i; j < lockerCount - 1; j++) {
+                    lockers[j] = lockers[j + 1];
+                }
                 lockers[lockerCount - 1] = null;
                 lockerCount--;
                 break;
@@ -116,5 +151,7 @@ public class LockerUtils {
         }
     }
 }
+
+
 
 
