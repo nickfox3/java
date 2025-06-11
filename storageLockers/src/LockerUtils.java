@@ -37,7 +37,7 @@ public class LockerUtils {
                 case "4":
                     result = goodBye();
                     System.out.println(result.getMessage());
-                    return; // Exit the loop
+                    return;
                 default:
                     System.out.println("Invalid option. Please try again.");
                     continue;
@@ -56,7 +56,7 @@ public class LockerUtils {
         int lockerNumber;
         do {
             lockerNumber = 1000 + (int) (Math.random() * 9000); // 1000–9999
-        } while (findLocker(lockerNumber) != null); // ensure it's unique
+        } while (findLocker(lockerNumber) != null);
 
         String pin = String.format("%04d", (int) (Math.random() * 10000)); // 0000–9999
 
