@@ -2,9 +2,9 @@ package mediaData;
 
 import Media.MetadataProvider;
 
-public record VideoData(String duration, int resolution, String name) implements MetadataProvider {
+public record VideoData(String name, int resolution, String duration) implements MetadataProvider {
     @Override
     public String getMetadata() {
-        return String.format("Book: %s, \nResolution: %d mins, \nDuration: %d", name, resolution, duration);
+        return String.format("Video: %s, \nResolution: %d mins, \nDuration: %s", name, resolution, duration);
     }
 }
